@@ -14,7 +14,7 @@
         </div>
         <div class="col-sm-6">
             <div class="col-xs-12 d-flex justify-content-end">
-                <a href="{{ route('user.create') }}" class="btn btn-primary" role="button">Criar Usuário</a>
+                <a href="{{ route('user.create') }}" class="btn btn-primary w-100" role="button">Criar Usuário</a>
             </div>
         </div>
     </div>
@@ -24,7 +24,7 @@
             <tr>
                 <th scope="col">Nome</th>
                 <th scope="col">Email</th>
-                <th scope="col">Ação</th>
+                <th scope="col" class="d-flex justify-content-end">Ação</th>
             </tr>
         </thead>
         <tbody>
@@ -32,15 +32,19 @@
                 <tr>
                     <th scope="row">{{ $user->name }}</th>
                     <td>{{ $user->email }}</td>
-                    <td>
+                    <td class="d-flex justify-content-end" style="gap: 5px">
                         <a href="{{ route('user.show', $user) }}" class="btn btn-info" role="button">Ver</a>
                         <a href="{{ route('user.edit', $user) }}" class="btn btn-warning" role="button">Editar</a>
-                        <a href="{{ route('user.destroy', $user) }}" class="btn btn-danger" role="button">Excluir</a>
+                        <form method="POST" action="{{ route('user.destroy', $user) }}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger" role="button">Excluir</button>
+                        </form>
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4" style="text-align: center">Nenhuma tarefa encontrada!</td>
+                    <td colspan="4" style="text-align: center">Nenhum usuário encontrado!</td>
                 </tr>
             @endforelse
         </tbody>

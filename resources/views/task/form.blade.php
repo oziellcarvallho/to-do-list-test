@@ -12,27 +12,30 @@
 @endsection
 
 @section('content')
-    <form action="{{ !is_object($task) ? route('task.store') : route('task.update', $task) }}" class="needs-validation" method="{{ !is_object($task) ? 'POST' : 'PUT' }}" id="{{ !is_object($task) ? 'create' : 'update' }}-task">
+    <form action="{{ !is_object($task) ? route('task.store') : route('task.update', $task) }}" class="needs-validation" method="POST" id="{{ !is_object($task) ? 'create' : 'update' }}-task">
         @csrf
+        @isset($task)
+            @method('PUT')
+        @endisset
         <div class="row g-3">
             <div class="col-sm-6">
                 <label for="title" class="form-label">Titulo</label>
                 <input name="title" type="text" class="form-control" id="title" placeholder="" value="" required>
-                
-                <div class="invalid-feedback">
-                    Valid first name is required.
-                </div>
+                @error('title')
+                    <div style="color: #dc3545;">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
-
             <div class="col-sm-6">
                 <label for="description" class="form-label">Descrição</label>
                 <input name="description" type="text" class="form-control" id="description" placeholder="" value="" required>
-                
-                <div class="invalid-feedback">
-                    Valid last name is required.
-                </div>
+                @error('description')
+                    <div style="color: #dc3545;">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
-
             <div class="col-md-6">
                 <label for="users" class="form-label">Usuários</label>
                 <select name="users_id[]" class="form-select" id="users" multiple required>
@@ -43,12 +46,12 @@
                         </option>
                     @endforeach
                 </select>
-                
-                <div class="invalid-feedback">
-                    Please select a valid country.
-                </div>
+                @error('users_id')
+                    <div style="color: #dc3545;">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
-
             <div class="col-md-6">
                 <label for="responsible" class="form-label">Responsável</label>
                 <select name="responsible_id" class="form-select" id="responsible" required>
@@ -59,10 +62,11 @@
                         </option>
                     @endforeach
                 </select>
-                
-                <div class="invalid-feedback">
-                    Please provide a valid state.
-                </div>
+                @error('responsible_id')
+                    <div style="color: #dc3545;">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
         </div>
 

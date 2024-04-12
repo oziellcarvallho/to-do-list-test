@@ -18,10 +18,8 @@ class AuthMiddleware
     {
         $user = Auth::user();
         if (!is_object($user)) {
-            return response('Unauthorized', 401);
+            return abort(401);
         }
-
-        return response('Unauthorized', 401);
 
         return $next($request);
     }

@@ -14,44 +14,51 @@
 @section('content')
     <br>
     <h4>Usuário</h4>
-    {{ $errors }}
     <br>
-    <form action="{{ !is_object($user) ? route('user.store') : route('user.update', $user) }}" class="needs-validation" method="{{ !is_object($user) ? 'POST' : 'PUT' }}" id="{{ !is_object($user) ? 'create' : 'update' }}-user">
+    <form action="{{ !is_object($user) ? route('user.store') : route('user.update', $user) }}" class="needs-validation" method="POST" id="{{ !is_object($user) ? 'create' : 'update' }}-user">
         @csrf
+        @isset($user)
+            @method('PUT')
+        @endisset
+
         <div class="row g-3">
             <div class="col-sm-6">
                 <label for="name" class="form-label">Nome</label>
-                <input name="name" type="text" class="form-control" id="name" placeholder="" value="{{ $user->name }}" required @if($disabled) disabled @endif>
-                
-                <div class="invalid-feedback">
-                    Valid first name is required.
-                </div>
+                <input name="name" type="text" class="form-control @error('name') is-invalid @enderror" id="name" placeholder="" value="{{ old('name', $user->name ?? null) }}" required @if($disabled) disabled @endif>
+                @error('name')
+                    <div style="color: #dc3545;">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
             <div class="col-6">
                 <label for="email" class="form-label">Email</label>
-                <input name="email" type="email" class="form-control" id="email" placeholder="you@example.com" value="{{ $user->email }}" required @if($disabled) disabled @endif>
-                
-                <div class="invalid-feedback">
-                    Please enter a valid email address for shipping updates.
-                </div>
+                <input name="email" type="email" class="form-control" id="email" placeholder="you@example.com" value="{{ old('email', $user->email ?? null) }}" required @if($disabled) disabled @endif>
+                @error('email')
+                    <div style="color: #dc3545;">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
         </div>
         <div class="row g-3">
             <div class="col-sm-6">
                 <label for="password" class="form-label">Senha</label>
-                <input name="password" type="password" class="form-control" id="password" placeholder="" required @if($disabled) @endif>
-                
-                <div class="invalid-feedback">
-                    Valid first name is required.
-                </div>
+                <input name="password" type="password" class="form-control" id="password" placeholder="" @if(!is_object($user)) required @endif @if($disabled) disabled @endif>
+                @error('password')
+                    <div style="color: #dc3545;">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
             <div class="col-6">
                 <label for="password-confirmation" class="form-label">Confirmar Senha</label>
-                <input name="password_confirmation" type="password" class="form-control" id="password-confirmation" placeholder="" @if($disabled) disabled @endif>
-                
-                <div class="invalid-feedback">
-                    Please enter a valid email address for shipping updates.
-                </div>
+                <input name="password_confirmation" type="password" class="form-control" id="password-confirmation" placeholder="" @if(!is_object($user)) required @endif @if($disabled) disabled @endif>
+                @error('password_confirmation')
+                    <div style="color: #dc3545;">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
         </div>
         <hr class="my-4">

@@ -56,7 +56,11 @@
                     <td>
                         <a href="{{ route('task.show', $task) }}" class="btn btn-info" role="button">Ver</a>
                         <a href="{{ route('task.edit', $task) }}" class="btn btn-warning" role="button">Editar</a>
-                        <a href="{{ route('task.destroy', $task) }}" class="btn btn-danger" role="button">Excluir</a>
+                        <form method="POST" action="{{ route('task.destroy', $task) }}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger" role="button">Excluir</button>
+                        </form>
                     </td>
                 </tr>
             @empty
