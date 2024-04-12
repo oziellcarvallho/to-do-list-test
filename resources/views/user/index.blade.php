@@ -14,7 +14,9 @@
         </div>
         <div class="col-sm-6">
             <div class="col-xs-12 d-flex justify-content-end">
-                <a href="{{ route('user.create') }}" class="btn btn-primary w-100" role="button">Criar Usuário</a>
+                @can('user-create')
+                    <a href="{{ route('user.create') }}" class="btn btn-primary" role="button">Criar Usuário</a>
+                @endcan
             </div>
         </div>
     </div>
@@ -33,13 +35,19 @@
                     <th scope="row">{{ $user->name }}</th>
                     <td>{{ $user->email }}</td>
                     <td class="d-flex justify-content-end" style="gap: 5px">
-                        <a href="{{ route('user.show', $user) }}" class="btn btn-info" role="button">Ver</a>
-                        <a href="{{ route('user.edit', $user) }}" class="btn btn-warning" role="button">Editar</a>
-                        <form method="POST" action="{{ route('user.destroy', $user) }}">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger" role="button">Excluir</button>
-                        </form>
+                        @can('user-view')
+                            <a href="{{ route('user.show', $user) }}" class="btn btn-info" role="button">Ver</a>
+                        @endcan
+                        @can('user-edit')
+                            <a href="{{ route('user.edit', $user) }}" class="btn btn-warning" role="button">Editar</a>
+                        @endcan
+                        @can('user-delete')
+                            <form method="POST" action="{{ route('user.destroy', $user) }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger" role="button">Excluir</button>
+                            </form>
+                        @endcan
                     </td>
                 </tr>
             @empty

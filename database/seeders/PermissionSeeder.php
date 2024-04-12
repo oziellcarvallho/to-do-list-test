@@ -16,6 +16,7 @@ class PermissionSeeder extends Seeder
     {
         // Usuários
         $users = Group::firstOrCreate([
+            'id' => 1,
             'name' => 'Usuários'
         ]);
   
@@ -46,6 +47,7 @@ class PermissionSeeder extends Seeder
 
         // Tarefas
         $tasks = Group::firstOrCreate([
+            'id' => 2,
             'name' => 'Tarefas'
         ]);
   

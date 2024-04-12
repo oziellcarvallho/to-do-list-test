@@ -11,7 +11,7 @@ class UpdateTaskRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,21 @@ class UpdateTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['max:255', 'min:3'],
+            'description' => ['max:255', 'min:2'],
+            'users_id' => ['exists:users,id'],
+            'responsible_id' => ['exists:users,id']
+        ];
+    }
+
+    public function messages() {
+        return [
+            'title.max' => 'O campo do título deve ter no máximo 255 caracteres.',
+            'title.min' => 'O campo do título deve ter pelo menos 3 caracteres.',            
+            'description.max' => 'O campo de descrição deve ter no máximo 255 caracteres.',
+            'description.min' => 'O campo de descrição deve ter pelo menos 2 caracteres.',
+            'users_id.exists' => 'O(s) usuário(s) especificado(s) não existe(m).',
+            'responsible_id.exists' => 'O responsável especificado não existe.'
         ];
     }
 }

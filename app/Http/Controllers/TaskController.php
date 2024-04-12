@@ -7,6 +7,8 @@ use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class TaskController extends Controller
 {
@@ -15,6 +17,10 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
+        if (Gate::forUser(Auth::user())->denies('task-view')) {
+            return abort(403);
+        }
+
         $tasks = Task::when($request->has('q'), function($query) use ($request){
             $query->where(function ($builder) use ($request) {
                 $builder->where('title', 'like', '%' . $request->q . '%')
@@ -30,6 +36,10 @@ class TaskController extends Controller
      */
     public function create()
     {
+        if (Gate::forUser(Auth::user())->denies('task-create')) {
+            return abort(403);
+        }
+
         $task = null;
         $disabled = false;
         $users = User::where('id', '<>', 1)->get();
@@ -42,6 +52,10 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
+        if (Gate::forUser(Auth::user())->denies('task-create')) {
+            return abort(403);
+        }
+
         $fields = $request->only([
             'title', 'description', 'status', 'users_id', 'responsible_id'
         ]);
@@ -60,6 +74,10 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
+        if (Gate::forUser(Auth::user())->denies('task-view')) {
+            return abort(403);
+        }
+
         $disabled = true;
         $users = User::where('id', '<>', 1)->get();
 
@@ -71,6 +89,10 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
+        if (Gate::forUser(Auth::user())->denies('task-edit')) {
+            return abort(403);
+        }
+
         $disabled = false;
         $users = User::where('id', '<>', 1)->get();
 
@@ -82,11 +104,21 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, Task $task)
     {
+        if (Gate::forUser(Auth::user())->denies('task-edit')) {
+            return abort(403);
+        }
+
         $fields = $request->only([
             'title', 'description', 'status', 'users_id', 'responsible_id'
         ]);
         
+        $responsible = User::findOrFail($fields['responsible_id']);
+        $fields['responsible_email'] = $responsible->email;
+
         $task->update($fields);
+        $task->users()->sync($fields['users_id']);
+
+        return redirect()->route('task.index')->with('flash_success', 'Tarefa editada com sucesso!');
     }
 
     /**
@@ -97,6 +129,10 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
+        if (Gate::forUser(Auth::user())->denies('task-delete')) {
+            return abort(403);
+        }
+
         $task->delete();
 
         return redirect()->route('task.index')->with('flash_success', 'Tarefa excluída com sucesso!');

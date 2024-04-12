@@ -9,12 +9,14 @@
     <div class="row">
         <div class="col-sm-6">
             <form role="search">
-                <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+                <input name="q" type="search" class="form-control" placeholder="Search..." method="GET" aria-label="Search">
             </form>
         </div>
         <div class="col-sm-6">
             <div class="col-xs-12 d-flex justify-content-end">
-                <a class="btn btn-primary" href="{{ route('task.create') }}" role="button">Criar Tarefa</a>
+                @can('task-create')
+                    <a class="btn btn-primary" href="{{ route('task.create') }}" role="button">Criar Tarefa</a>
+                @endcan
             </div>
         </div>
     </div>
@@ -25,9 +27,9 @@
                 <th scope="col">Título</th>
                 <th scope="col">Descrição</th>
                 <th scope="col">Status</th>
-                <th scope="col">Usuários</th>
                 <th scope="col">Email do Responsável</th>
-                <th scope="col">Ação</th>
+                <th scope="col">Data de Criação</th>
+                <th scope="col" class="d-flex justify-content-end">Ação</th>
             </tr>
         </thead>
         <tbody>
@@ -47,25 +49,27 @@
                                 <span class="badge rounded-pill bg-secondary">Indefinido</span>
                         @endswitch
                     </td>
-                    <td>
-                        @foreach($task->users as $user)
-                            {{ $user->name }}<br>
-                        @endforeach
-                    </td>
                     <td>{{ $task->responsible_email }}</td>
-                    <td>
-                        <a href="{{ route('task.show', $task) }}" class="btn btn-info" role="button">Ver</a>
-                        <a href="{{ route('task.edit', $task) }}" class="btn btn-warning" role="button">Editar</a>
-                        <form method="POST" action="{{ route('task.destroy', $task) }}">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger" role="button">Excluir</button>
-                        </form>
+                    <td>{{ $task->created_at->format('d/m/Y à\s H:i:s') }}</td>
+                    <td class="d-flex justify-content-end" style="gap: 5px">
+                        @can('task-view')
+                            <a href="{{ route('task.show', $task) }}" class="btn btn-info" role="button">Ver</a>
+                        @endcan
+                        @can('task-edit')
+                            <a href="{{ route('task.edit', $task) }}" class="btn btn-warning" role="button">Editar</a>
+                        @endcan
+                        @can('task-delete')
+                            <form method="POST" action="{{ route('task.destroy', $task) }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger" role="button">Excluir</button>
+                            </form>
+                        @endcan
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4" style="text-align: center">Nenhuma tarefa encontrada!</td>
+                    <td colspan="5" style="text-align: center">Nenhuma tarefa encontrada!</td>
                 </tr>
             @endforelse
         </tbody>

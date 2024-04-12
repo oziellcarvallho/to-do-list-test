@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->group('auth', [
-            \App\Http\Middleware\AuthMiddleware::class,
+            \App\Http\Middleware\AuthMiddleware::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
