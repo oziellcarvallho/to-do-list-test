@@ -13,12 +13,22 @@
                     <div class="col-sm-6">
                         <input name="q" type="search" class="form-control" placeholder="Buscar" value="{{ request()->get('q') }}" aria-label="Search">
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-3">
                         <select name="status" class="form-select">
                             <option value="">Status</option>
                             @foreach (config('utils.status') as $key => $status)
                                 <option value="{{ $key }}" @selected(request()->get('status') == $key)>
                                     {{ $status }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-sm-3">
+                        <select name="sort_by" class="form-select">
+                            <option value="">Ordenar por</option>
+                            @foreach (config('utils.sort_by') as $key => $sortBy)
+                                <option value="{{ $key }}" @selected(request()->get('sort_by') == $key)>
+                                    {{ $sortBy }}
                                 </option>
                             @endforeach
                         </select>

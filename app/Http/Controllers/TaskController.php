@@ -21,6 +21,8 @@ class TaskController extends Controller
             return abort(403);
         }
 
+        $sortBy = $request->input('sort_by') ?? 'id';
+
         $tasks = Task::when($request->filled('q'), function($query) use ($request){
                 $query->where(function ($builder) use ($request) {
                     $builder->where('title', 'like', '%' . $request->q . '%')
@@ -29,7 +31,7 @@ class TaskController extends Controller
             })->when($request->filled('status'), function ($query) use ($request){
                 $query->where('status', $request->status);
             })
-            ->orderBy('id', 'desc')->paginate(15);
+            ->orderBy($sortBy, 'desc')->paginate(15);
     
         return view('task.index', ['tasks' => $tasks]);
     }

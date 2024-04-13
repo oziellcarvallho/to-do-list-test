@@ -11,6 +11,7 @@ Copie o arquivo “.env.example” dê no nome “.env” ao novo arquivo e faç
 Execute os comandos abaixo no termial:
 - composer install
 - composer dump-autoload
+- php artisan config:cache
 - php artisan migrate
 - php artisan db:seed
 
