@@ -8,8 +8,8 @@
 @section('content')
     <div class="row">
         <div class="col-sm-6">
-            <form role="search">
-                <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+            <form action="{{ route('user.index') }}" method="GET" id="serach" role="search">
+                <input name="q" type="search" class="form-control" placeholder="Buscar" aria-label="Search">
             </form>
         </div>
         <div class="col-sm-6">
@@ -26,6 +26,7 @@
             <tr>
                 <th scope="col">Nome</th>
                 <th scope="col">Email</th>
+                <th scope="col">Data de Cadastro</th>
                 <th scope="col" class="d-flex justify-content-end">Ação</th>
             </tr>
         </thead>
@@ -34,6 +35,7 @@
                 <tr>
                     <th scope="row">{{ $user->name }}</th>
                     <td>{{ $user->email }}</td>
+                    <td>{{ $user->created_at->format('d/m/Y à\s H:i:s') }}</td>
                     <td class="d-flex justify-content-end" style="gap: 5px">
                         @can('user-view')
                             <a href="{{ route('user.show', $user) }}" class="btn btn-info" role="button">Ver</a>

@@ -8,8 +8,22 @@
 @section('content')
     <div class="row">
         <div class="col-sm-6">
-            <form role="search">
-                <input name="q" type="search" class="form-control" placeholder="Search..." method="GET" aria-label="Search">
+            <form action="{{ route('task.index') }}" method="GET" id="serach" role="search">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <input name="q" type="search" class="form-control" placeholder="Buscar" value="{{ request()->get('q') }}" aria-label="Search">
+                    </div>
+                    <div class="col-sm-6">
+                        <select name="status" class="form-select">
+                            <option value="">Status</option>
+                            @foreach (config('utils.status') as $key => $status)
+                                <option value="{{ $key }}" @selected(request()->get('status') == $key)>
+                                    {{ $status }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
             </form>
         </div>
         <div class="col-sm-6">
@@ -69,7 +83,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" style="text-align: center">Nenhuma tarefa encontrada!</td>
+                    <td colspan="6" style="text-align: center">Nenhuma tarefa encontrada!</td>
                 </tr>
             @endforelse
         </tbody>

@@ -24,6 +24,7 @@ class UpdateTaskRequest extends FormRequest
         return [
             'title' => ['max:255', 'min:3'],
             'description' => ['max:255', 'min:2'],
+            'status' => ['in:not_completed,completed'],
             'users_id' => ['exists:users,id'],
             'responsible_id' => ['exists:users,id']
         ];
@@ -35,6 +36,7 @@ class UpdateTaskRequest extends FormRequest
             'title.min' => 'O campo do título deve ter pelo menos 3 caracteres.',            
             'description.max' => 'O campo de descrição deve ter no máximo 255 caracteres.',
             'description.min' => 'O campo de descrição deve ter pelo menos 2 caracteres.',
+            'status.in' => 'O campo status deve ter um dos seguintes valores: Não Concluído, Concluído.',
             'users_id.exists' => 'O(s) usuário(s) especificado(s) não existe(m).',
             'responsible_id.exists' => 'O responsável especificado não existe.'
         ];

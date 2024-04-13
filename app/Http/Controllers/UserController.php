@@ -21,15 +21,15 @@ class UserController extends Controller
             return abort(403);
         }
 
-        $users = User::when($request->has('q'), function($query) use ($request){
-            $query->where(function ($builder) use ($request) {
-                $builder->where('nome', 'like', '%' . $request->q . '%')
-                    ->orWhere('email', 'like', '%' . $request->q . '%');
-            });
-        })
-        ->where('id', '<>', 1)
-        ->orderBy('id', 'desc')->paginate(15);
-    
+        $users = User::when($request->filled('q'), function($query) use ($request){
+                $query->where(function ($builder) use ($request) {
+                    $builder->where('name', 'like', '%' . $request->q . '%')
+                        ->orWhere('email', 'like', '%' . $request->q . '%');
+                });
+            })
+            ->where('id', '<>', 1)
+            ->orderBy('id', 'desc')->paginate(15);
+
         return view('user.index', ['users' => $users]);
     }
 
@@ -63,7 +63,8 @@ class UserController extends Controller
 
         $fields['password'] = Hash::make($request->password);
         
-        User::create($fields);
+        $user = User::create($fields);
+        $user->roles()->attach([3]);
 
         return redirect()->route('user.index')->with('flash_success', 'Usuário cadastrado com sucesso!');
     }

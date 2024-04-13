@@ -21,12 +21,15 @@ class TaskController extends Controller
             return abort(403);
         }
 
-        $tasks = Task::when($request->has('q'), function($query) use ($request){
-            $query->where(function ($builder) use ($request) {
-                $builder->where('title', 'like', '%' . $request->q . '%')
-                    ->orWhere('description', 'like', '%' . $request->q . '%');
-            });
-        })->orderBy('id', 'desc')->paginate(15);
+        $tasks = Task::when($request->filled('q'), function($query) use ($request){
+                $query->where(function ($builder) use ($request) {
+                    $builder->where('title', 'like', '%' . $request->q . '%')
+                        ->orWhere('description', 'like', '%' . $request->q . '%');
+                });
+            })->when($request->filled('status'), function ($query) use ($request){
+                $query->where('status', $request->status);
+            })
+            ->orderBy('id', 'desc')->paginate(15);
     
         return view('task.index', ['tasks' => $tasks]);
     }
